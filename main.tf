@@ -34,6 +34,14 @@ module "vpc" {
 
   enable_nat_gateway = var.enable_nat_gateway
   single_nat_gateway = true
+
+  public_subnet_tags = {
+    "kubernetes.io/role/elb" = "1"
+  }
+
+  private_subnet_tags = {
+    "kubernetes.io/role/internal-elb" = "1"
+  }
 }
 
 ########################
@@ -50,8 +58,11 @@ module "eks" {
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
 
+  # Explicitly enable public endpoint access
   cluster_endpoint_public_access  = true
   cluster_endpoint_private_access = true
+
+  enable_cluster_creator_admin_permissions = true
 
   eks_managed_node_groups = {
     workers = {
