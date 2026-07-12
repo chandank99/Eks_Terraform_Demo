@@ -50,16 +50,16 @@ module "eks" {
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
 
+  cluster_endpoint_public_access  = true
+  cluster_endpoint_private_access = true
+
   eks_managed_node_groups = {
-
     workers = {
-
       instance_types = [var.instance_type]
 
       desired_size = var.node_count
       min_size     = var.node_count
       max_size     = var.node_count
     }
-
   }
 }
